@@ -16,7 +16,6 @@ class num{
         this.a = a;
         this.b = b;
     }
-    //-------------------------------------------------------------------------------------------------------
     String print(){
         return "<" + a + ">: " + b;
     }
@@ -24,41 +23,15 @@ class num{
         num toCheck = (num)o;
         return this.a.equals(toCheck.a);
     }
-    //-------------------------------------------------------------------------------------------------------
 }
 
 public class Calc{
     //Main functional.
     private Properties commandsNames = null;
-    private ArrayList<Integer> stack = new ArrayList<Integer>();//сам стек, с которого будут сниматься числа для операций
-    private ArrayList<num> numbers = new ArrayList<num>();//все числа, определенные DEFINE. Удаляются командой PUSH?
     private Scanner scan = null;
+    Stack stack = null;
     //private Class[] comandClasses = null;
 
-    public void AddNum(num n) {
-        boolean Added = false;
-        int ind = 0;
-        for (num number : numbers) {
-            if (number.equals(n)) {
-                Added = true;
-                break;
-            }
-            ind++;
-        }
-        if(!Added)
-            this.numbers.add(n);
-        else
-            this.numbers.get(ind).b = n.b;
-    }
-    public void AddToStack(int n){
-        stack.add(n);
-    }
-    public void DeleteFromStack(/*num n*/){
-        stack.remove(stack.size() - 1);
-    }
-    public int LastInStack(){
-        return stack.get(stack.size() - 1);
-    }
     {
         FileInputStream in_d = null;
         commandsNames = new Properties();
@@ -68,9 +41,7 @@ public class Calc{
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    public int getInt(num n){
-        return numbers.get(numbers.indexOf(n)).b;
+        stack = new Stack();
     }
     String getProperty(String s) {
         return commandsNames.getProperty(s);
@@ -137,15 +108,15 @@ public class Calc{
             dev = (DEVIDE) conDev.newInstance();
             sqrt = (SQRT) conSqrt.newInstance();
 
-            methodDef = def.getClass().getDeclaredMethod("ToDo", Calc.class, ArrayList.class);
-            methodPush = push.getClass().getDeclaredMethod("ToDo", Calc.class, ArrayList.class);
-            methodPop = pop.getClass().getDeclaredMethod("ToDo", Calc.class, ArrayList.class);
-            methodPrint = print.getClass().getDeclaredMethod("ToDo", Calc.class, ArrayList.class);
-            methodSum = sum.getClass().getDeclaredMethod("ToDo", Calc.class, ArrayList.class);
-            methodMult = mult.getClass().getDeclaredMethod("ToDo", Calc.class, ArrayList.class);
-            methodSub = sub.getClass().getDeclaredMethod("ToDo", Calc.class, ArrayList.class);
-            methodDev = dev.getClass().getDeclaredMethod("ToDo", Calc.class, ArrayList.class);
-            methodSqrt = sqrt.getClass().getDeclaredMethod("ToDo", Calc.class, ArrayList.class);
+            methodDef = def.getClass().getDeclaredMethod("ToDo", Stack.class);
+            methodPush = push.getClass().getDeclaredMethod("ToDo", Stack.class);
+            methodPop = pop.getClass().getDeclaredMethod("ToDo", Stack.class);
+            methodPrint = print.getClass().getDeclaredMethod("ToDo", Stack.class);
+            methodSum = sum.getClass().getDeclaredMethod("ToDo", Stack.class);
+            methodMult = mult.getClass().getDeclaredMethod("ToDo", Stack.class);
+            methodSub = sub.getClass().getDeclaredMethod("ToDo", Stack.class);
+            methodDev = dev.getClass().getDeclaredMethod("ToDo", Stack.class);
+            methodSqrt = sqrt.getClass().getDeclaredMethod("ToDo", Stack.class);
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -153,19 +124,13 @@ public class Calc{
         while (scan.hasNext()) {
             String s = scan.nextLine();
             if (s.equals("EXIT")) {
-                int c = 0;
+
                 System.out.println("Numbers:");
-                while (c < numbers.size()) {
-                    System.out.println(numbers.get(c).print());
-                    c++;
-                }
-                this.AddToStack(999);
-                c = 0;
+                stack.printNums();
+                //Stack.AddToStack(999);
+
                 System.out.println("Stack:");
-                while (c < stack.size()) {
-                    System.out.println(stack.get(c));
-                    c++;
-                }
+                stack.printStack();
                 break;
             }
             //parsing
@@ -174,6 +139,7 @@ public class Calc{
             while (strings.hasNext()) {
                 ArrStr.add(strings.next());//correct probably
             }
+            stack.setNumStr(ArrStr);
             //System.out.println(ArrStr);
             int i = 0;
             String commandName = null;
@@ -185,6 +151,7 @@ public class Calc{
                 i++;
             }
             if(commandName == null){
+                System.out.println("WrongCommend");
                 continue;
             }
             try {
@@ -196,62 +163,54 @@ public class Calc{
                 switch(commandName){
                     case "DEFINE":
                         if (methodDef != null) {
-                            methodDef.invoke(def, this, ArrStr);
+                            methodDef.invoke(def, stack);
                         }
                         break;
                     case "PUSH":
                         if (methodPush != null) {
-                            methodPush.invoke(push, this, ArrStr);
+                            methodPush.invoke(push, stack);
                         }
                         break;
                     case "POP":
                         if (methodPop != null) {
-                            methodPop.invoke(pop, this, ArrStr);
+                            methodPop.invoke(pop, stack);
                         }
                         break;
                     case "PRINT":
                         if (methodPrint != null) {
-                            methodPrint.invoke(print, this, ArrStr);
+                            methodPrint.invoke(print, stack);
                         }
                         break;
-                    case "+":
+                    case "SUM":
                         if (methodSum != null) {
-                            methodSum.invoke(sum, this, ArrStr);
+                            methodSum.invoke(sum, stack);
                         }
                         break;
-                    case "*":
+                    case "MULTIPLY":
                         if (methodMult != null) {
-                            methodMult.invoke(mult, this, ArrStr);
+                            methodMult.invoke(mult, stack);
                         }
                         break;
-                    case "-":
+                    case "SUBTRACT":
                         if (methodSub != null) {
-                            methodSub.invoke(sub, this, ArrStr);
+                            methodSub.invoke(sub, stack);
                         }
                         break;
-                    case "/":
+                    case "DEVIDE"://change to "DEVIDE"
                         if (methodDev != null) {
-                            methodDev.invoke(dev, this, ArrStr);
+                            System.out.println("Devide:");
+                            methodDev.invoke(dev, stack);
                         }
                         break;
                     case "SQRT":
                         if (methodSqrt != null) {
-                            methodSqrt.invoke(sqrt, this, ArrStr);
+                            methodSqrt.invoke(sqrt, stack);
                         }
                         break;
                 }
             } catch (InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
             }
-
-//            DEFINE defd = new DEFINE(3);
-//            defd.ToDo(ArrStr);
-            //end of Parsing
-            //рефлексия:
-            //либо как-то заранее загружаем все классы
-            //либо делаем их статическими(но тогда рефлексия будет не нужна(или все равно каждый раз создается статический объект?
         }
     }
 }
-//нужно еще разобраться с класслоадером:
-//как он вызывается? почему рефлексия тут лучше, чем статик классы?
