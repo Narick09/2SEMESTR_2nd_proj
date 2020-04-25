@@ -1,13 +1,10 @@
 package SecondNumPack;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Properties;
 
 public class Stack{
     private ArrayList<Integer> stack = null;//сам стек, с которого будут сниматься числа для операций
-    private ArrayList<num> numbers= null;//все числа, определенные DEFINE. Удаляются командой PUSH?
+    private ArrayList<num> numbers= null;//все числа, определенные DEFINE.
     private ArrayList<String> lineParameter = null;
     {
         stack = new ArrayList<Integer>();
@@ -31,7 +28,7 @@ public class Stack{
     public void AddToStack(int n){
         stack.add(n);
     }
-    public void DeleteFromStack(/*num n*/){
+    public void DeleteFromStack(){
         stack.remove(stack.size() - 1);
     }
     public int getLastInStack(){
