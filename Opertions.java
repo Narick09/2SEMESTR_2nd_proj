@@ -1,6 +1,5 @@
 package SecondNumPack;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import static java.lang.Math.sqrt;
@@ -12,43 +11,35 @@ interface Commands {
 }
 
 class DEFINE implements Commands {
-    //DEFINE(int a){}
-    //DEFINE(){}
-    //public void smt(){};
     @Override
     public void ToDo(Stack s) {
         Scanner check = null;
-        //exception if arrayList doesn't have 2 arguments
         num toArr = null;
         try {
             check = new Scanner(s.getNumStr().get(2));
             if (check.hasNextInt()) {
                 toArr = new num(s.getNumStr().get(1), check.nextInt());
             } else {
-                //throw MyErr wrongArgument(NotANumber)
-                System.out.println("WrongArguments");
+                System.out.println("Wrong number of arguments");
             }
         } catch (NullPointerException | IndexOutOfBoundsException e) {
-            //System.out.println("smth wrong");
             e.printStackTrace();
         }
-        //System.out.println("perfect");
-        if (toArr != null) {
-            System.out.println(toArr.a + ": " + toArr.b);
-        }
+//        if (toArr != null) {
+//            System.out.println(toArr.a + ": " + toArr.b);
+//        }
         s.AddNum(toArr);
     }
 }
 class PUSH implements Commands {
     @Override
     public void ToDo(Stack s) {
-        //delete from ArrayList<num> numbers?
         if(s.getNumStr().size() == 2){
             num n = new num(s.getNumStr().get(1), 0);
             s.AddToStack(s.getInt(n));
         }
         else{
-            //исключение о неверном кол-ве арг-ов
+            System.out.println("Wrong number of arguments");
         }
     }
 }
@@ -56,84 +47,103 @@ class PUSH implements Commands {
 class POP implements Commands {
     @Override
     public void ToDo(Stack S) {
-//        if(tmp.size() == 2){
-//            num n = new num(tmp.get(1), 0);
-//            c.DeleteFromStack(n);
-//        }
-//        else{
-//            //исключение о неверном кол-ве арг-ов
-//        }
         if(S.getStackSize() != 0)
             S.DeleteFromStack();
+        else
+            System.out.println("Stack is empty");
     }
 }
 
 class PRINT implements Commands {
     @Override
     public void ToDo(Stack S) {
-        System.out.println(S.getLastInStack());
+        if(S.getStackSize() != 0)
+            System.out.println(S.getLastInStack());
+        else
+            System.out.println("Stack is empty");
     }
 }
 
 class SUM implements Commands {
     @Override
     public void ToDo(Stack S) {
-        int a = S.getLastInStack();
-        S.DeleteFromStack();
-        int b =a + S.getLastInStack();
-        S.DeleteFromStack();
-        S.AddToStack(b);
+        if(S.getNumStr().size() == 3){
+            int a = S.getLastInStack();
+            S.DeleteFromStack();
+            int b =a + S.getLastInStack();
+            S.DeleteFromStack();
+            S.AddToStack(b);
+        }
+        else{
+            System.out.println("Wrong number of arguments");
+        }
     }
 }
 
 class MULTIPLY implements Commands {
     @Override
     public void ToDo(Stack S) {
-        int a = S.getLastInStack();
-        S.DeleteFromStack();
-        int b =a * S.getLastInStack();
-        S.DeleteFromStack();
-        S.AddToStack(b);
+        if(S.getNumStr().size() == 3){
+            int a = S.getLastInStack();
+            S.DeleteFromStack();
+            int b =a * S.getLastInStack();
+            S.DeleteFromStack();
+            S.AddToStack(b);
+        }
+        else{
+            System.out.println("Wrong number of arguments");
+        }
     }
 }
 
 class SUBTRACT implements Commands {//вычитать
     @Override
     public void ToDo(Stack S) {
-        int a = S.getLastInStack();
-        S.DeleteFromStack();
-        int b =a - S.getLastInStack();
-        S.DeleteFromStack();
-        S.AddToStack(b);
+        if(S.getNumStr().size() == 3){
+            int a = S.getLastInStack();
+            S.DeleteFromStack();
+            int b =a - S.getLastInStack();
+            S.DeleteFromStack();
+            S.AddToStack(b);
+        }
+        else{
+            System.out.println("Wrong number of arguments");
+        }
     }
 }
 
 class DEVIDE implements Commands {
     @Override
     public void ToDo(Stack S) {
-        int a = S.getLastInStack();
-        //System.out.println(a);
-        S.DeleteFromStack();
-        int b = S.getLastInStack();
-        //System.out.println(b);
-        S.DeleteFromStack();
-        int f = 0;
-        if(b != 0){
-            f = b / a;
-        }else{
-            //interruption
+        if(S.getNumStr().size() == 3){
+            int a = S.getLastInStack();
+            S.DeleteFromStack();
+            int b = S.getLastInStack();
+            S.DeleteFromStack();
+            int f = 0;
+            if(b != 0){
+                f = a / b;
+            }else{
+                System.out.println("Second argument is null");
+            }
+            S.AddToStack(f);
         }
-        //System.out.println("sssssssssss");
-        S.AddToStack(f);
-        //Stack.AddToStack(999);
+        else{
+            System.out.println("Wrong number of arguments");
+        }
     }
 }
 
 class SQRT implements Commands {
     @Override
     public void ToDo(Stack S) {
-        int a = S.getLastInStack();
-        S.DeleteFromStack();
-        S.AddToStack((int) sqrt(a));
+        if(S.getNumStr().size() == 2){
+            int a = S.getLastInStack();
+            S.DeleteFromStack();
+            S.AddToStack((int) sqrt(a));
+        }
+        else{
+            System.out.println("Wrong number of arguments");
+        }
     }
 }
