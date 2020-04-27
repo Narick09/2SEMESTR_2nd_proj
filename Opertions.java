@@ -11,6 +11,9 @@ interface Commands {
 }
 
 class DEFINE implements Commands {
+    //DEFINE(int a){}
+    //DEFINE(){}
+    //public void smt(){};
     @Override
     public void ToDo(Stack s) {
         Scanner check = null;
@@ -21,6 +24,7 @@ class DEFINE implements Commands {
                 toArr = new num(s.getNumStr().get(1), check.nextInt());
             } else {
                 System.out.println("Wrong number of arguments");
+
             }
         } catch (NullPointerException | IndexOutOfBoundsException e) {
             e.printStackTrace();
@@ -36,7 +40,15 @@ class PUSH implements Commands {
     public void ToDo(Stack s) {
         if(s.getNumStr().size() == 2){
             num n = new num(s.getNumStr().get(1), 0);
-            s.AddToStack(s.getInt(n));
+            try{
+                s.AddToStack(s.getInt(n));
+            }
+            catch(IndexOutOfBoundsException e){
+                System.out.println("This number is not found");
+            }
+            catch(Exception e){
+                System.out.println(e.getLocalizedMessage());
+            }
         }
         else{
             System.out.println("Wrong number of arguments");
@@ -67,10 +79,10 @@ class PRINT implements Commands {
 class SUM implements Commands {
     @Override
     public void ToDo(Stack S) {
-        if(S.getNumStr().size() == 3){
+        if(S.getStackSize() > 1){
             int a = S.getLastInStack();
             S.DeleteFromStack();
-            int b =a + S.getLastInStack();
+            int b = a + S.getLastInStack();
             S.DeleteFromStack();
             S.AddToStack(b);
         }
@@ -83,7 +95,7 @@ class SUM implements Commands {
 class MULTIPLY implements Commands {
     @Override
     public void ToDo(Stack S) {
-        if(S.getNumStr().size() == 3){
+        if(S.getStackSize() > 1){
             int a = S.getLastInStack();
             S.DeleteFromStack();
             int b =a * S.getLastInStack();
@@ -99,7 +111,7 @@ class MULTIPLY implements Commands {
 class SUBTRACT implements Commands {//вычитать
     @Override
     public void ToDo(Stack S) {
-        if(S.getNumStr().size() == 3){
+        if(S.getStackSize() > 1){
             int a = S.getLastInStack();
             S.DeleteFromStack();
             int b =a - S.getLastInStack();
@@ -115,7 +127,7 @@ class SUBTRACT implements Commands {//вычитать
 class DEVIDE implements Commands {
     @Override
     public void ToDo(Stack S) {
-        if(S.getNumStr().size() == 3){
+        if(S.getStackSize() > 1){
             int a = S.getLastInStack();
             S.DeleteFromStack();
             int b = S.getLastInStack();
@@ -137,7 +149,7 @@ class DEVIDE implements Commands {
 class SQRT implements Commands {
     @Override
     public void ToDo(Stack S) {
-        if(S.getNumStr().size() == 2){
+        if(S.getStackSize() > 0){
             int a = S.getLastInStack();
             S.DeleteFromStack();
             S.AddToStack((int) sqrt(a));
