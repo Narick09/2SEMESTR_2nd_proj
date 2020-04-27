@@ -39,7 +39,6 @@ public class Calc{
         }
         stack = new Stack();
         parser = new Parser();
-        parser.conInit();
     }
     String getProperty(String s) {
         return commandsNames.getProperty(s);
@@ -56,38 +55,48 @@ public class Calc{
         while (scan.hasNext()) {
             String s = scan.nextLine();
             if (s.equals("EXIT")) {
-
-                System.out.println("Numbers:");
-                stack.printNums();
-                //Stack.AddToStack(999);
-
-                System.out.println("Stack:");
-                stack.printStack();
+//                System.out.println("Numbers:");
+//                stack.printNums();
+//                System.out.println("Stack:");
+//                stack.printStack();
                 break;
             }
             //parsing
             Scanner strings = new Scanner(s);
             ArrayList<String> ArrStr = new ArrayList<>();
             while (strings.hasNext()) {
-                ArrStr.add(strings.next());
+                String tmp = strings.next();
+                //if(tmp != null){
+                    if(!tmp.contains("#"))
+                        ArrStr.add(tmp);
+                    else {
+                        tmp = (tmp.indexOf('#') == 0) ? "#" : tmp.substring(0, tmp.indexOf('#'));
+                        ArrStr.add(tmp);
+                        break;
+                    }
+                //}
             }
-            stack.setNumStr(ArrStr);
             int i = 0;
             String commandName = null;
             while (i < ArrStr.size()) {
                 if (this.getProperty(ArrStr.get(i)) != null) {
                     commandName = this.getProperty(ArrStr.get(i));
                     break;
+                } else if(ArrStr.get(i).substring(0,1).equals("#")){
+                    commandName ="#";
+                    break;
                 }
                 i++;
             }
+            ArrStr.remove((String)"#");
             if(commandName == null){
-                System.out.println("WrongCommend");
+                System.out.println("WrongCommand");
                 continue;
             }
             if (commandName.equals("#")) {
                 continue;
             }
+            stack.setNumStr(ArrStr);
             //call parser
             parser.parsing(stack, commandName);
         }
