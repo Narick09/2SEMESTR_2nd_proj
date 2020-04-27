@@ -69,5 +69,4 @@ public class Stack{
             c++;
         }
     }
-
 }
